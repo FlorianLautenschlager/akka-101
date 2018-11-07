@@ -88,10 +88,10 @@ public class ScriptSplitter extends AbstractLoggingActor {
 
     private Pair<Script, Script> split(Script script) {
 
-        int index = (int) Math.floor(script.size() / 2d);
+        int lastElement = (int) Math.floor(script.size() / 2d);
 
-        Script partOne = script.getChapters(1, index);
-        Script partTwo = script.getChapters(index, script.size());
+        Script partOne = script.getChapters(1, lastElement);
+        Script partTwo = script.getChapters(lastElement + 1, script.size());
 
         return Pair.of(partOne, partTwo);
     }

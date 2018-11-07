@@ -13,7 +13,7 @@ public class Script {
      * @param name           of the script
      * @param chapterContent pairs of chapter and content
      */
-    public Script(String name, Pair<Integer, String>... chapterContent) {
+    public Script(String name, Pairs<Integer, String> chapterContent) {
 
         if (chapterContent == null) {
             throw new IllegalStateException("Chapter content is 'null' or has invalid format.");
@@ -22,7 +22,7 @@ public class Script {
         this.name = name;
         chapters = new HashMap<>();
 
-        for (Pair<Integer, String> pair : chapterContent) {
+        for (Pair<Integer, String> pair : chapterContent.pairs()) {
             chapters.put(pair.getFirst(), pair.getSecond());
         }
 
@@ -63,19 +63,26 @@ public class Script {
         return Objects.hash(name, chapters);
     }
 
+    /**
+     * @param start included
+     * @param end   included
+     * @return a new script with chapters from start to end
+     */
     public Script getChapters(int start, int end) {
 
         if (end - start <= 0) {
             throw new IllegalArgumentException("Defined range is invalid");
         }
 
-        int length = end - start;
+        Pairs.Builder<Integer, String> builder = new Pairs.Builder<>();
 
-        Pair[] result = new Pair[length];
+        for (int i = start; i <= end; i++) {
+            String content = chapters.get(i);
 
-        for (int i = 0, j = start; i < length; i++, j++) {
-            result[i] = Pair.of(j, chapters.get(j));
+            if (content != null && content.length() > 0) {
+                builder.and(Pair.of(i, chapters.get(i)));
+            }
         }
-        return new Script(this.name + " Chapters:{" + start + "-" + end + "}", result);
+        return new Script(this.name + " Chapters:{" + start + "-" + end + "}", builder.build());
     }
 }

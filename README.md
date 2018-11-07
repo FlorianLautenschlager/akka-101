@@ -9,7 +9,7 @@ Simply import maven projekt into IntelliJ or a tool of your choice.
 ### Build executable jar and run it
 
 ```bash
-mvn assembly:single
+mvn clean compile assembly:single  
 
 java -jar target/akka-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
