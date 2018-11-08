@@ -29,7 +29,7 @@ First Create Actor System:
 final ActorSystem system = ActorSystem.create(actorSystemName);
 ```
 
-Than send Message from Root Actor to `ScriptSplitter` Actor
+Then send Message from Root Actor to `ScriptSplitter` Actor
 ```
 scriptSplitter.tell(script, ActorRef.noSender());
 ```
@@ -44,7 +44,7 @@ Pair<Script, Script> splits = Util.splitScript(script);
 first.tell(splits.getFirst(), getSelf());
 second.tell(splits.getSecond(), getSelf());
 ```
-Than implement receive index:
+Then implement receive index:
 ```
 indexMap.put(getSender(), index);
 
