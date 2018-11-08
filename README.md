@@ -1,6 +1,6 @@
 # Akka 101
 
-Source code for the Actors in Java lecture.
+Source code for the Actors in Java lecture ([slides](/ActorSystem101.png?raw=true)).
 
 ![alt text](/ActorSystem101.png?raw=true)
 
