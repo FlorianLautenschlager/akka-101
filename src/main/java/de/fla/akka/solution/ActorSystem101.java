@@ -1,17 +1,20 @@
-package de.fla.akka;
+package de.fla.akka.solution;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import de.fla.akka.dt.Pair;
-import de.fla.akka.dt.Pairs;
-import de.fla.akka.dt.Script;
+import de.fla.akka.common.Pair;
+import de.fla.akka.common.Pairs;
+import de.fla.akka.common.Script;
 
 import java.io.IOException;
 
 public class ActorSystem101 {
 
     public static void main(String[] args) {
-        final ActorSystem system = ActorSystem.create("101-aktoren-lerngrupppe");
+
+        final String actorSystemName = "101-aktoren-lerngrupppe";
+
+        final ActorSystem system = ActorSystem.create(actorSystemName);
 
         Script script = new Script("Programming 3",
                 new Pairs.Builder<Integer, String>()

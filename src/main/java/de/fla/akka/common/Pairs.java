@@ -1,4 +1,4 @@
-package de.fla.akka.dt;
+package de.fla.akka.common;
 
 import java.util.HashSet;
 import java.util.Set;

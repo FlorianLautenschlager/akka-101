@@ -32,7 +32,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.fla.akka.ActorSystem101</mainClass>
+                            <mainClass>de.fla.akka.solution.ActorSystem101</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

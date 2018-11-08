@@ -1,11 +1,14 @@
-package de.fla.akka;
+package de.fla.akka.solution;
 
 import akka.actor.AbstractLoggingActor;
 import akka.actor.Props;
-import de.fla.akka.dt.Index;
-import de.fla.akka.dt.Script;
+import de.fla.akka.common.Index;
+import de.fla.akka.common.Script;
+import de.fla.akka.common.Util;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ScriptAnalyzer extends AbstractLoggingActor {
 
@@ -24,7 +27,7 @@ public class ScriptAnalyzer extends AbstractLoggingActor {
         return receiveBuilder()
                 .match(Script.class, script -> {
                             log().info("Got script '{}' from '{}'", script.getName(), getSender());
-                            Index index = analyzeChapters(script);
+                    Index index = Util.analyzeChapters(script, this.keywords);
                             //Send index back to sender
                             getSender().tell(index, getSelf());
                         }
@@ -33,22 +36,4 @@ public class ScriptAnalyzer extends AbstractLoggingActor {
                 .build();
     }
 
-    private Index analyzeChapters(Script script) {
-
-        Map<String, List<Integer>> index = new HashMap<>();
-
-        for (String keyword : keywords) {
-            for (Map.Entry<Integer, String> chapterContent : script.getChapters().entrySet()) {
-                if (chapterContent.getValue().toLowerCase().contains(keyword.toLowerCase())) {
-                    if (!index.containsKey(keyword)) {
-                        index.put(keyword, new ArrayList<>());
-                    }
-
-                    index.get(keyword).add(chapterContent.getKey());
-                }
-            }
-        }
-
-        return new Index(script.getName(), index);
-    }
 }

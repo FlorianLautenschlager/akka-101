@@ -1,13 +1,15 @@
-package de.fla.akka;
+package de.fla.akka.solution;
 
 import akka.actor.*;
 import akka.japi.pf.DeciderBuilder;
-import de.fla.akka.dt.Index;
-import de.fla.akka.dt.Pair;
-import de.fla.akka.dt.Script;
+import de.fla.akka.common.Index;
+import de.fla.akka.common.Pair;
+import de.fla.akka.common.Script;
+import de.fla.akka.common.Util;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScriptSplitter extends AbstractLoggingActor {
 
@@ -29,7 +31,7 @@ public class ScriptSplitter extends AbstractLoggingActor {
                             scriptName = script.getName();
 
                             //Split script
-                            Pair<Script, Script> splits = split(script);
+                    Pair<Script, Script> splits = Util.splitScript(script);
                             first.tell(splits.getFirst(), getSelf());
                             second.tell(splits.getSecond(), getSelf());
                         }
@@ -40,7 +42,7 @@ public class ScriptSplitter extends AbstractLoggingActor {
                     log().info("Got index for '{}' from '{}'", index.getName(), getSender());
 
                     if (indexMap.containsKey(first) && indexMap.containsKey(second)) {
-                        log().info("Got all pieces. Result is {}", merge(indexMap));
+                        log().info("Got all pieces. Result is {}", Util.mergeIndexOfActors(scriptName, indexMap, first, second));
                     }
                 })
                 .matchAny(o -> log().info("Got unknown message."))
@@ -53,47 +55,6 @@ public class ScriptSplitter extends AbstractLoggingActor {
                 DeciderBuilder.match(NullPointerException.class, e -> SupervisorStrategy.restart())
                         .matchAny(o -> SupervisorStrategy.escalate())
                         .build());
-    }
-
-    private Index merge(Map<ActorRef, Index> indexMap) {
-
-        Index scriptAnalyzer1 = indexMap.get(this.first);
-        Index scriptAnalyzer2 = indexMap.get(this.second);
-
-        Set<String> keywords = new HashSet<String>() {{
-            addAll(scriptAnalyzer1.getKeyWords());
-            addAll(scriptAnalyzer2.getKeyWords());
-        }};
-
-
-        Map<String, List<Integer>> result = new HashMap<>();
-
-        for (String keyword : keywords) {
-
-            if (!result.containsKey(keyword)) {
-                result.put(keyword, new ArrayList<>());
-            }
-
-            List<Integer> chapters = new ArrayList<>();
-
-            chapters.addAll(scriptAnalyzer1.getChapters(keyword));
-            chapters.addAll(scriptAnalyzer2.getChapters(keyword));
-
-            result.get(keyword).addAll(chapters);
-        }
-
-        return new Index(scriptName, result);
-
-    }
-
-    private Pair<Script, Script> split(Script script) {
-
-        int lastElement = (int) Math.floor(script.size() / 2d);
-
-        Script partOne = script.getChapters(1, lastElement);
-        Script partTwo = script.getChapters(lastElement + 1, script.size());
-
-        return Pair.of(partOne, partTwo);
     }
 
 }
