@@ -1,6 +1,7 @@
 # Akka 101
 
 Source code for the Actors in Java lecture ([slides](/ActorSystem101.png?raw=true)).
+It is split in a solution package and a template package that contains some todo's.
 
 ![alt text](/ActorSystem101.png?raw=true)
 
